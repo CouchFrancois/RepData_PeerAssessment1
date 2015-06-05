@@ -1,0 +1,81 @@
+# Reproducible Research: Peer Assessment 1
+
+
+## Loading and preprocessing the data
+
+```r
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+library(xtable)
+data <- read.csv("activity.csv")
+```
+
+
+
+
+
+## What is mean total number of steps taken per day?
+
+```r
+stepsPerDay <- data %>%
+      group_by(date) %>%
+      summarize(tot = sum(steps, na.rm = T))
+
+hist(stepsPerDay$tot, main = "Histogram of Steps per Day", xlab = "Steps per Day")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
+dtMean <- round(mean(stepsPerDay$tot),digits = 2)
+dtMedian <- median(stepsPerDay$tot)
+```
+#### Mean: 9354.23     
+#### Median: 10395
+
+
+
+
+## What is the average daily activity pattern?
+
+```r
+stepsPerTime <- data %>%
+      group_by(interval) %>%
+      summarize(avg = mean(steps, na.rm=T))
+
+plot(stepsPerTime$interval,stepsPerTime$avg,type = "l",main="Avg Steps per Interval",xlab="5 min interval",ylab="Avg Steps")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
+dtMax <- filter(stepsPerTime, avg == max(stepsPerTime$avg)) %>% select(interval)
+```
+#### Interval with highest average steps: 835
+
+
+
+
+
+## Imputing missing values
+
+
+
+
+
+## Are there differences in activity patterns between weekdays and weekends?
